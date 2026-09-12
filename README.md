@@ -3,7 +3,7 @@
 **Tracking a sensorless space roomba from a distance using recursive Bayesian filtering, an exponential-decay proximity detector, and decision-theoretic action selection.**
 
 
-> Companion project to [**Belief-Space-Localization**](../) (see project 1) — that project taught the roomba to localize *itself* by acting. This project flips the problem: **you** are the *LocatorBot*, and you must figure out where the roomba is using probability and a noisy detector, without ever seeing it directly.
+> Companion project to [**Belief-Space-Localization**](https://github.com/G-Dairo/Belief-Space-Localization) (see project 1) — that project taught the roomba to localize *itself* by acting. This project flips the problem: **you** are the *LocatorBot*, and you must figure out where the roomba is using probability and a noisy detector, without ever seeing it directly.
 
 ---
 
@@ -107,17 +107,25 @@ Rather than greedily moving toward whatever cell currently looks most probable, 
 
 The final extension allows the *LocatorBot itself* to move, not just the roomba. This changes the joint state to $s_t = (x_t, L_t)$ and gives the agent, at every step, a genuine choice between two categories of action: **sense**, or **move** (either the roomba toward the locator, or the locator toward the belief peak) — selected by comparing their expected information gain:
 
-- **Expected entropy reduction from sensing:**
+**Expected entropy reduction from sensing:**
+
 $$
 \Delta H_{\text{sense}} = H(b_t^{-}) - \mathbb{E}_{z_t}\big[H(b_t \mid z_t)\big], \qquad H(b) = -\sum_x b(x)\log b(x)
 $$
-- **Expected certainty gain from repositioning the locator toward the belief peak:**
+
+**Expected certainty gain from repositioning the locator toward the belief peak:**
+
 $$
 \Delta C_{\text{move}} = C_t(L_t') - C_t(L_t)
 $$
-- **Action selection** — take whichever action maximizes expected utility net of its cost:
+
+**Action selection** — take whichever action maximizes expected utility net of its cost:
+
 $$
-a_t^{*} = \arg\max_{a_t} \big(\mathbb{E}[U_t(a_t)] - \text{Cost}(a_t)\big), \quad
+a_t^{*} = \arg\max_{a_t} \big(\mathbb{E}[U_t(a_t)] - \text{Cost}(a_t)\big)
+$$
+
+$$
 U_t = -\big(w_m^{(R)} M_t^{(R)} + w_s S_t + w_m^{(L)} M_t^{(L)} + w_u(1 - C_t)\big)
 $$
 
